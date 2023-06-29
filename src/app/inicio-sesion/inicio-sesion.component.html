@@ -1,0 +1,71 @@
+<h2 style="text-align:center">API Cortes de luz</h2>
+<h3 style="text-align:center">¡Ingreso Exitoso!</h3>
+<div class="login">
+
+    <p style="font-size: xx-large; font-weight: bolder;text-align:center">Empresas</p>
+
+    <p> Agregar empresa </p>
+
+    <input type="text" placeholder="nombre de la empresa" #nombreEmpresa><br>
+    <input type="text" placeholder="direccion de la empresa" #dirEmpresa><br>
+    <button (click)="agregarEmpresa(nombreEmpresa.value, dirEmpresa.value)"> agregar </button>
+    {{avisoCrearEmpresa}}
+
+
+    <p>Borrar empresa</p>
+
+    <input type="text" placeholder="nombre de la empresa" #nombreEmpresa2><br>
+    <button (click)="borrarEmpresa(nombreEmpresa2.value)">Borrar</button>
+    {{avisoBorrarEmpresa}}
+    <br>
+
+    <p>Modificar empresa</p>
+
+    <input type="text" placeholder="nombre anterior de la empresa" #nombreEmpresa4><br>
+    <input type="text" placeholder="nombre nuevo de la empresa" #nombreEmpresa3><br>
+    <input type="text" placeholder="direccion nueva de la empresa" #dirEmpresa2><br>
+    <button (click)="modificarEmpresa(nombreEmpresa3.value, nombreEmpresa4.value, dirEmpresa2.value)">Modificar</button>
+    {{avisoModificarEmpresa}}
+    <br><br>
+
+    <button (click)="verEmpresas()">Ver empresas</button>
+
+    <table *ngIf=verTabla>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Direccion</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of empresasLista; let i = index" [attr.data-index]="i">
+                <td>{{empresasLista[i]._id}}</td>
+                <td>{{empresasLista[i].nombre}}</td>
+                <td>{{empresasLista[i].direccion}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+
+    <input type="text" placeholder="nombre de la empresa" #nombreEmpresa5><br>
+    <button (click)="verEmpresa(nombreEmpresa5.value)">Ver empresa</button><br>
+    <table *ngIf=listaEmpresa>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Direccion</th>
+                <th>__V</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{empresaLista[0]._id}}</td>
+                <td>{{empresaLista[0].nombre}}</td>
+                <td>{{empresaLista[0].direccion}}</td>
+                <td>{{empresaLista[0].__v}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
