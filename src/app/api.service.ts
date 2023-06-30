@@ -10,6 +10,7 @@ export class ApiService {
   constructor(private http: HttpClient) { }
 
   //usuarios
+  
   signin(body: any) {
     return this.http.post("http://localhost:2414/usuario/signin", body);
   }
@@ -49,6 +50,53 @@ export class ApiService {
   getEmpresa(params: any, headers: any){
     return this.http.get("http://localhost:2414/empresas/" + params, headers)
   }
+
+  //Domicilio
+
+  agregarDomicilio(body: any, headers: any) {
+    return this.http.post("http://localhost:2414/domicilios", body, headers)
+  }
+
+  borrarDomicilio(params: any, headers: any) {
+    return this.http.delete("http://localhost:2414/domicilios/" + params, headers)
+  }
+
+  modificarDomicilio(params: any, body: any, headers: any){
+    return this.http.put("http://localhost:2414/domicilios/" + params, body, headers)
+  }
+
+  getDomicilios(headers: any){
+    return this.http.get("http://localhost:2414/domicilios", headers)
+  }
+
+  getDomicilio(params: any, headers: any){
+    return this.http.get("http://localhost:2414/domicilios/" + params, headers)
+  }
+
+  //Corte
+
+  agregarCorte(body: any, headers: any) {
+    return this.http.post("http://localhost:2414/cortes", body, headers)
+  }
+
+  borrarCorte(params: any, headers: any) {
+    return this.http.delete("http://localhost:2414/cortes/" + params, headers)
+  }
+
+  modificarCorte(params: any, body: any, headers: any){
+    return this.http.put("http://localhost:2414/cortes/" + params, body, headers)
+  }
+
+  getCortes(headers: any){
+    return this.http.get("http://localhost:2414/cortes", headers)
+  }
+
+  getCorte(params: any, headers: any){
+    return this.http.get("http://localhost:2414/cortes/" + params, headers)
+  }
+
+
+
 
 }
 
