@@ -11,6 +11,37 @@ import { ApiService } from '../api.service';
 })
 export class InicioSesionComponent {
 
+  //inicio constructor empresa, domicilios y corte
+
+  constructor(public ApiService: ApiService) {
+    this.avisoCrearEmpresa = "";
+    this.avisoBorrarEmpresa = "";
+    this.avisoModificarEmpresa = "";
+    this.empresasLista = [];
+    this.empresaLista = [];
+    this.verTabla = false
+    this.listaEmpresa = false
+
+    this.avisoCrearDomicilio = "";
+    this.avisoBorrarDomicilio = "";
+    this.avisoModificarDomicilio = "";
+    this.domiciliosLista = [];
+    this.domicilioLista = [];
+    this.verTablaD = false
+    this.listaDomicilio = false
+
+    this.avisoCrearCorte = "";
+    this.avisoBorrarCorte = "";
+    this.avisoModificarCorte = "";
+    this.cortesLista = [];
+    this.corteLista = [];
+    this.verTablaC = false
+    this.listaCorte = false
+
+  }
+
+  //fin constructor y empieza empresas 
+
   users: any;
   avisoCrearEmpresa: string;
   avisoBorrarEmpresa: string;
@@ -19,7 +50,8 @@ export class InicioSesionComponent {
     _id: number,
     nombre: string,
     direccion: number
-  }>;
+  }>; 
+  
 
   empresaLista: Array<{
     nombre: string;
@@ -30,16 +62,6 @@ export class InicioSesionComponent {
   listaEmpresa: boolean;
   verTabla: boolean;
 
-
-  constructor(public ApiService: ApiService) {
-    this.avisoCrearEmpresa = "";
-    this.avisoBorrarEmpresa = "";
-    this.avisoModificarEmpresa = "";
-    this.empresasLista = [];
-    this.empresaLista = [];
-    this.verTabla = false
-    this.listaEmpresa = false
-  }
 
   public agregarEmpresa(nombre: string, direccion: string) {
 
@@ -72,6 +94,8 @@ export class InicioSesionComponent {
     })
 
   }
+
+  
 
   public borrarEmpresa(nombre: string) {
     var headers = new HttpHeaders({
@@ -173,5 +197,169 @@ export class InicioSesionComponent {
 
     })
   }
+ 
+  //finaliza empresas y empieza domicilios
+
+  avisoCrearDomicilio: string;
+  avisoBorrarDomicilio: string;
+  avisoModificarDomicilio: string;
+  domiciliosLista: Array<{
+    direccion: string
+    nombre_empresa: string
+    barrio: string
+    consumo: number
+    dueno: string
+    ids_cortes: number
+  }>;
+
+  domicilioLista: Array<{
+    nombreDeEmpresa: string;
+    direccion: string;
+    __b: number;
+    __id: number;
+  }>
+  listaDomicilio: boolean;
+  verTablaD: boolean;
+
+
+
+  public agregarDomicilio(direccion: string, nombre_empresa: string, barrio: string, consumo: number, dueno: string) {
+
+    var body = {
+      direccion: direccion,
+      nombre_empresa: nombre_empresa,
+      barrio: barrio,
+      consumo: consumo,
+      dueno: dueno,
+
+    }
+
+    var headers = new HttpHeaders({
+      'Authorization': `${localStorage.getItem("claveSesion")}`
+    })
+
+    return this.ApiService.agregarDomicilio(body, { headers }).subscribe({
+
+      next: (data) => {
+
+        console.log(data)
+        this.avisoCrearDomicilio = "Domicilio creado"
+
+      },
+
+      error: (error) => {
+
+        console.log(error)
+        this.avisoCrearDomicilio = ""
+
+      }
+
+    })
+
+  }
+
+  public borrarDomicilio(direccion: string) {
+    var headers = new HttpHeaders({
+      'Authorization': `${localStorage.getItem("claveSesion")}`
+    })
+    return this.ApiService.borrarDomicilio(direccion, { headers }).subscribe({
+
+      next: (data) => {
+
+        console.log(data)
+        if (data != null) {
+          this.avisoBorrarDomicilio = "Domicilio borrada"
+        }
+        else this.avisoBorrarDomicilio = "El domicilio no existe"
+
+
+      },
+
+      error: (error) => {
+
+        console.log(error)
+        this.avisoBorrarDomicilio = ""
+
+      }
+
+    })
+  }
+
+  
+  public modificarDomicilio(direccionNueva: string, direccionVieja: string, direccion: string) {
+    var headers = new HttpHeaders({
+      'Authorization': `${localStorage.getItem("claveSesion")}`
+    })
+    var body = {
+      direccion: direccionNueva
+    }
+    return this.ApiService.modificarDomicilio(direccionVieja, body, { headers }).subscribe({
+
+      next: (data) => {
+
+        console.log(data)
+        if (data != null) {
+          this.avisoModificarDomicilio = "Empresa modificada"
+        }
+        else this.avisoModificarDomicilio = "La empresa no existe"
+
+
+      },
+
+      error: (error) => {
+
+        console.log(error)
+        this.avisoModificarDomicilio = ""
+
+      }
+
+    })
+  }
+
+  public verDomicilios() {
+    var headers = new HttpHeaders({
+      'Authorization': `${localStorage.getItem("claveSesion")}`
+    })
+    return this.ApiService.getDomicilios({ headers }).subscribe({
+
+      next: (data) => {
+
+        console.log(data)
+        this.verTablaD = true;
+        this.domiciliosLista = JSON.parse(JSON.stringify(data))
+      },
+
+      error: (error) => {
+
+        console.log(error)
+
+      }
+
+    })
+  }
+
+  public verDomicilio(direccion: string) {
+    var headers = new HttpHeaders({
+      'Authorization': `${localStorage.getItem("claveSesion")}`
+    })
+    return this.ApiService.getDomicilio(direccion, { headers }).subscribe({
+
+      next: (data) => {
+        console.log(data)
+        this.domicilioLista = JSON.parse(JSON.stringify(data))
+        this.listaDomicilio = true;
+      },
+
+      error: (error) => {
+
+        console.log(error)
+
+      }
+
+    })
+  }
+
+  //fin domicilios y empieza cortes
+
 
 } 

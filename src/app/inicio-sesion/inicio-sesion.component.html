@@ -2,6 +2,7 @@
 <h3 style="text-align:center">¡Ingreso Exitoso!</h3>
 <div class="login">
 
+
     <p style="font-size: xx-large; font-weight: bolder;text-align:center">Empresas</p>
 
     <p> Agregar empresa </p>
@@ -68,4 +69,79 @@
             </tr>
         </tbody>
     </table>
+
+
+    <p style="font-size: xx-large; font-weight: bolder;text-align:center">domicilios</p>
+
+    <p> Agregar domicilio </p>
+
+    <input type="text" placeholder="direccion" #dirD><br>
+    <input type="text" placeholder="nombre del domicilio" #empresaD><br>
+    <input type="text" placeholder="nombre del barrio" #barrioD><br>
+    <input type="test" placeholder="cantidad de consumo" #consumoD><br>
+    <input type="text" placeholder="nombre del dueño" #duenoD><br>
+    <button (click)="agregarDomicilio(dirD.value, empresaD.value, barrioD.value, consumoD.value, duenoD.value)"> agregar </button>
+    {{avisoCrearDomicilio}}
+
+
+    <p>Borrar domicilio</p>
+
+    <input type="text" placeholder="nombre del domicilio" #dirD2><br>
+    <button (click)="borrarDomicilio(dirD2.value)">Borrar</button>
+    {{avisoBorrarDomicilio}}
+    <br>
+
+    <p>Modificar domicilio</p>
+
+    <input type="text" placeholder="direccion anterior de la empresa" #dirD4><br>
+    <input type="text" placeholder="direcion nuevo de la empresa" #dirD3><br>
+    <input type="text" placeholder="domicilio nuevo" #dirEmpresa2><br>
+    <button (click)="modificarDomicilio(dirD3.value, dirD4.value, empresaD.value)">Modificar</button>
+    {{avisoModificarDomicilio}}
+    <br><br>
+
+    <button (click)="verDomicilios()">Ver domicilios</button>
+
+    <table *ngIf=verTabla>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Direccion</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of empresasLista; let i = index" [attr.data-index]="i">
+                <td>{{domiciliosLista[i].ids_cortes}}</td>
+                <td>{{domiciliosLista[i].nombre_empresa}}</td>
+                <td>{{domiciliosLista[i].direccion}}</td>
+                <td>{{domiciliosLista[i].consumo}}</td>
+                <td>{{domiciliosLista[i].barrio}}</td>
+                <td>{{domiciliosLista[i].dueno}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+
+    <input type="text" placeholder="ingrese direccion para ver domicilio" #dirD5><br>
+    <button (click)="verDomicilio(dirD5.value)">Ver empresa</button><br>
+    <table *ngIf=listaDomicilio>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Direccion</th>
+                <th>__B</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{domicilioLista[0].__id}}</td>
+                <td>{{domicilioLista[0].nombreDeEmpresa}}</td>
+                <td>{{domicilioLista[0].direccion}}</td>
+                <td>{{domicilioLista[0].__b}}</td>
+            </tr>
+        </tbody>
+    </table>
+
 </div>
