@@ -361,5 +361,156 @@ export class InicioSesionComponent {
 
   //fin domicilios y empieza cortes
 
+  avisoCrearCorte: string;
+  avisoBorrarCorte: string;
+  avisoModificarCorte: string;
+  CortesLista: Array<{
+    inicio: Date 
+    fin: Date 
+    barrio: string
+    ids_corte: number
+  }>;
 
+  CorteLista: Array<{
+    barrio: string
+    __b: number;
+    __id: number;
+  }>
+  listacorte: boolean;
+  verTablaD: boolean;
+
+
+
+  public agregarCorte(barrio: string, fin: Date, inicio: Date) {
+
+    var body = {
+      barrio: barrio,
+      fin: fin,
+      inicio: inicio
+    }
+
+    var headers = new HttpHeaders({
+      'Authorization': `${localStorage.getItem("claveSesion")}`
+    })
+
+    return this.ApiService.agregarCorte(body, { headers }).subscribe({
+
+      next: (data) => {
+
+        console.log(data)
+        this.avisoCrearCorte = "corte creado"
+
+      },
+
+      error: (error) => {
+
+        console.log(error)
+        this.avisoCrearCorte = ""
+
+      }
+
+    })
+
+  }
+
+  public borrarCorte(direccion: string) {
+    var headers = new HttpHeaders({
+      'Authorization': `${localStorage.getItem("claveSesion")}`
+    })
+    return this.ApiService.borrarCorte(barrio, { headers }).subscribe({
+
+      next: (data) => {
+
+        console.log(data)
+        if (data != null) {
+          this.avisoBorrarCorte = "Corte borrada"
+        }
+        else this.avisoBorrarCorte = "El Corte no existe"
+
+
+      },
+
+      error: (error) => {
+
+        console.log(error)
+        this.avisoBorrarCorte = ""
+
+      }
+
+    })
+  }
+
+  
+  public modificarCorte(barrioNuevo: string, barrioViejo: string, barrio: string) {
+    var headers = new HttpHeaders({
+      'Authorization': `${localStorage.getItem("claveSesion")}`
+    })
+    var body = {
+      barrio: barrioNuevo
+    }
+    return this.ApiService.modificarCorte(barrioViejo, body, { headers }).subscribe({
+
+      next: (data) => {
+
+        console.log(data)
+        if (data != null) {
+          this.avisoModificarCorte = "Corte modificada"
+        }
+        else this.avisoModificarCorte = "El corte no existe"
+
+
+      },
+
+      error: (error) => {
+
+        console.log(error)
+        this.avisoModificarCorte = ""
+
+      }
+
+    })
+  }
+
+  public verCortes() {
+    var headers = new HttpHeaders({
+      'Authorization': `${localStorage.getItem("claveSesion")}`
+    })
+    return this.ApiService.getCortes({ headers }).subscribe({
+
+      next: (data) => {
+
+        console.log(data)
+        this.verTablaD = true;
+        this.CortesLista = JSON.parse(JSON.stringify(data))
+      },
+
+      error: (error) => {
+
+        console.log(error)
+
+      }
+
+    })
+  }
+
+  public verCorte(barrio: string) {
+    var headers = new HttpHeaders({
+      'Authorization': `${localStorage.getItem("claveSesion")}`
+    })
+    return this.ApiService.getCorte(barrio, { headers }).subscribe({
+
+      next: (data) => {
+        console.log(data)
+        this.CorteLista = JSON.parse(JSON.stringify(data))
+        this.listacorte = true;
+      },
+
+      error: (error) => {
+
+        console.log(error)
+
+      }
+
+    })
+  }
 } 
