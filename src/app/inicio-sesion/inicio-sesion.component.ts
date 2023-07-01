@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ApiService } from '../api.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -13,7 +14,7 @@ export class InicioSesionComponent {
 
   //inicio constructor empresa, domicilios y corte
 
-  constructor(public ApiService: ApiService) {
+  constructor(public ApiService: ApiService, private router: Router) {
     this.avisoCrearEmpresa = "";
     this.avisoBorrarEmpresa = "";
     this.avisoModificarEmpresa = "";
@@ -204,26 +205,26 @@ export class InicioSesionComponent {
   avisoBorrarDomicilio: string;
   avisoModificarDomicilio: string;
   domiciliosLista: Array<{
+    _id: string
     direccion: string
     nombre_empresa: string
     barrio: string
-    consumo: number
-    dueno: string
-    ids_cortes: number
+    consumo: string
+    __v: string
+    ids_cortes: []
   }>;
 
   domicilioLista: Array<{
-    nombreDeEmpresa: string;
+    nombre_empresa: string;
     direccion: string;
-    __b: number;
-    __id: number;
+    _id: number;
   }>
   listaDomicilio: boolean;
   verTablaD: boolean;
 
 
 
-  public agregarDomicilio(direccion: string, nombre_empresa: string, barrio: string, consumo: number, dueno: string) {
+  public agregarDomicilio(direccion: string, nombre_empresa: string, barrio: string, consumo: string, dueno: string, ids_cortes: string) {
 
     var body = {
       direccion: direccion,
@@ -231,6 +232,7 @@ export class InicioSesionComponent {
       barrio: barrio,
       consumo: consumo,
       dueno: dueno,
+      ids_cortes: ids_cortes
 
     }
 
@@ -325,8 +327,9 @@ export class InicioSesionComponent {
       next: (data) => {
 
         console.log(data)
-        this.verTablaD = true;
         this.domiciliosLista = JSON.parse(JSON.stringify(data))
+        this.verTablaD = true;
+        
       },
 
       error: (error) => {
@@ -364,29 +367,33 @@ export class InicioSesionComponent {
   avisoCrearCorte: string;
   avisoBorrarCorte: string;
   avisoModificarCorte: string;
-  CortesLista: Array<{
+  cortesLista: Array<{
     inicio: Date 
-    fin: Date 
+    fin: string 
     barrio: string
-    ids_corte: number
+    id_corte: string
   }>;
-
-  CorteLista: Array<{
+  cantidadCortes!: string
+  duracion!: string
+  cantidadDomicilios!: string
+  corteLista: Array<{
     barrio: string
-    __b: number;
-    __id: number;
+    inicio: string;
+    id_corte: number;
+    fin: string
   }>
-  listacorte: boolean;
-  verTablaD: boolean;
+  listaCorte: boolean;
+  verTablaC: boolean;
 
 
 
-  public agregarCorte(barrio: string, fin: Date, inicio: Date) {
+  public agregarCorte(id_corte: string, barrio: string, fin: string, inicio: string) {
 
     var body = {
       barrio: barrio,
       fin: fin,
-      inicio: inicio
+      inicio: inicio,
+      id_corte: id_corte
     }
 
     var headers = new HttpHeaders({
@@ -413,19 +420,19 @@ export class InicioSesionComponent {
 
   }
 
-  public borrarCorte(direccion: string) {
+  public borrarCorte(id_corte: string) {
     var headers = new HttpHeaders({
       'Authorization': `${localStorage.getItem("claveSesion")}`
     })
-    return this.ApiService.borrarCorte(barrio, { headers }).subscribe({
+    return this.ApiService.borrarCorte(id_corte, { headers }).subscribe({
 
       next: (data) => {
 
         console.log(data)
         if (data != null) {
-          this.avisoBorrarCorte = "Corte borrada"
+          this.avisoBorrarCorte = "Corte borrado"
         }
-        else this.avisoBorrarCorte = "El Corte no existe"
+        else this.avisoBorrarCorte = "El corte no existe"
 
 
       },
@@ -441,20 +448,23 @@ export class InicioSesionComponent {
   }
 
   
-  public modificarCorte(barrioNuevo: string, barrioViejo: string, barrio: string) {
+  public modificarCorte(barrio: string, idViejo: string, fin: string, inicio: string) {
     var headers = new HttpHeaders({
       'Authorization': `${localStorage.getItem("claveSesion")}`
     })
     var body = {
-      barrio: barrioNuevo
+      barrio: barrio,
+      fin: fin,
+      inicio: inicio,
+      id_corte: idViejo
     }
-    return this.ApiService.modificarCorte(barrioViejo, body, { headers }).subscribe({
+    return this.ApiService.modificarCorte(idViejo, body, { headers }).subscribe({
 
       next: (data) => {
 
         console.log(data)
         if (data != null) {
-          this.avisoModificarCorte = "Corte modificada"
+          this.avisoModificarCorte = "Corte modificado"
         }
         else this.avisoModificarCorte = "El corte no existe"
 
@@ -480,8 +490,8 @@ export class InicioSesionComponent {
       next: (data) => {
 
         console.log(data)
-        this.verTablaD = true;
-        this.CortesLista = JSON.parse(JSON.stringify(data))
+        this.verTablaC = true;
+        this.cortesLista = JSON.parse(JSON.stringify(data))
       },
 
       error: (error) => {
@@ -501,8 +511,8 @@ export class InicioSesionComponent {
 
       next: (data) => {
         console.log(data)
-        this.CorteLista = JSON.parse(JSON.stringify(data))
-        this.listacorte = true;
+        this.corteLista = JSON.parse(JSON.stringify(data))
+        this.listaCorte = true;
       },
 
       error: (error) => {
@@ -513,4 +523,72 @@ export class InicioSesionComponent {
 
     })
   }
+
+  public cortesXbarrio(barrio: string){
+    var headers = new HttpHeaders({
+      'Authorization': `${localStorage.getItem("claveSesion")}`
+    })
+    return this.ApiService.cortesXbarrio(barrio, {headers}).subscribe({
+
+      next: (data) => {
+        console.log(data)
+        this.cantidadCortes = JSON.stringify(data)
+      },
+
+      error: (error) => {
+
+        console.log(error)
+
+      }
+
+    })
+  }
+
+  public duracionXcorte(idCorte: string){
+    var headers = new HttpHeaders({
+      'Authorization': `${localStorage.getItem("claveSesion")}`
+    })
+
+    return this.ApiService.duracionXcorte(idCorte, {headers}).subscribe({
+
+      next: (data) => {
+        console.log(data)
+        this.duracion = JSON.stringify(data) + " dias"
+      },
+
+      error: (error) => {
+
+        console.log(error)
+
+      }
+
+    })
+  }
+
+  public domiciliosXbarrio(barrio: string){
+    var headers = new HttpHeaders({
+      'Authorization': `${localStorage.getItem("claveSesion")}`
+    })
+    return this.ApiService.domiciliosXbarrio(barrio, {headers}).subscribe({
+
+      next: (data) => {
+        console.log(data)
+        this.cantidadDomicilios = JSON.stringify(data)
+      },
+
+      error: (error) => {
+
+        console.log(error)
+
+      }
+
+    })
+  }
+
+  public logOut(){
+    localStorage.clear;
+    this.router.navigate(["/login"])
+  }
+
+
 } 

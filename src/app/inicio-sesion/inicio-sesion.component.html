@@ -1,7 +1,9 @@
+<button (click)="logOut()">Cerrar sesion</button>
 <h2 style="text-align:center">API Cortes de luz</h2>
 <h3 style="text-align:center">¡Ingreso Exitoso!</h3>
 <div class="login">
 
+     <!--EMPRESAS-->
 
     <p style="font-size: xx-large; font-weight: bolder;text-align:center">Empresas</p>
 
@@ -70,6 +72,8 @@
         </tbody>
     </table>
 
+   <!--DOMICILIOS-->
+
 
     <p style="font-size: xx-large; font-weight: bolder;text-align:center">domicilios</p>
 
@@ -80,7 +84,8 @@
     <input type="text" placeholder="nombre del barrio" #barrioD><br>
     <input type="test" placeholder="cantidad de consumo" #consumoD><br>
     <input type="text" placeholder="nombre del dueño" #duenoD><br>
-    <button (click)="agregarDomicilio(dirD.value, empresaD.value, barrioD.value, consumoD.value, duenoD.value)"> agregar </button>
+    <input type="text" placeholder="id del domicilio" #IDD><br>
+    <button (click)="agregarDomicilio(dirD.value, empresaD.value, barrioD.value, consumoD.value, duenoD.value, IDD.value)"> agregar </button>
     {{avisoCrearDomicilio}}
 
 
@@ -102,46 +107,137 @@
 
     <button (click)="verDomicilios()">Ver domicilios</button>
 
-    <table *ngIf=verTabla>
+    <table *ngIf=verTablaD>
         <thead>
             <tr>
                 <th>Id</th>
                 <th>Nombre</th>
                 <th>Direccion</th>
+                <th>consumo</th>
+                <th>barrio</th>
+                <th>_ID</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let item of empresasLista; let i = index" [attr.data-index]="i">
+            <tr *ngFor="let item of domiciliosLista; let i = index" [attr.data-index]="i">
                 <td>{{domiciliosLista[i].ids_cortes}}</td>
                 <td>{{domiciliosLista[i].nombre_empresa}}</td>
                 <td>{{domiciliosLista[i].direccion}}</td>
                 <td>{{domiciliosLista[i].consumo}}</td>
                 <td>{{domiciliosLista[i].barrio}}</td>
-                <td>{{domiciliosLista[i].dueno}}</td>
+                <td>{{domiciliosLista[i]._id}}</td>
             </tr>
         </tbody>
     </table>
     <br>
 
     <input type="text" placeholder="ingrese direccion para ver domicilio" #dirD5><br>
-    <button (click)="verDomicilio(dirD5.value)">Ver empresa</button><br>
+    <button (click)="verDomicilio(dirD5.value)">Ver domicilio</button><br>
     <table *ngIf=listaDomicilio>
         <thead>
             <tr>
                 <th>Id</th>
                 <th>Nombre</th>
                 <th>Direccion</th>
-                <th>__B</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>{{domicilioLista[0].__id}}</td>
-                <td>{{domicilioLista[0].nombreDeEmpresa}}</td>
+                <td>{{domicilioLista[0]._id}}</td>
+                <td>{{domicilioLista[0].nombre_empresa}}</td>
                 <td>{{domicilioLista[0].direccion}}</td>
-                <td>{{domicilioLista[0].__b}}</td>
             </tr>
         </tbody>
     </table>
 
+    <!--CORTES DE LUZ-->
+
+    <p style="font-size: xx-large; font-weight: bolder;text-align:center">cortes</p>
+
+    <p> Agregar Corte </p>
+
+    <input type="text" placeholder="id del corte" #idC><br>
+    <input type="date" placeholder="inicio del corte" #inicioC><br>
+    <input type="date" placeholder="finalizacion del corte" #finC><br>
+    <input type="test" placeholder="barrio donde fue el corte" #barrioC><br>
+   
+    <button (click)="agregarCorte(idC.value, barrioC.value, finC.value, inicioC.value)"> agregar </button>
+    {{avisoCrearCorte}}
+
+
+    <p>Borrar Corte</p>
+
+    <input type="text" placeholder="id del corte" #idC2><br>
+    <button (click)="borrarCorte(idC2.value)">Borrar</button>
+    {{avisoBorrarCorte}}
+    <br>
+
+    <p>Modificar corte</p>
+
+    <input type="text" placeholder="id anterior del corte" #idC3><br>
+    <input type="date" placeholder="inicio del corte" #inicioC2><br>
+    <input type="date" placeholder="finalizacion del corte" #finC2><br>
+    <input type="text" placeholder="barrio donde fue el corte" #barrioC2><br>
+    <button (click)="modificarCorte(barrioC2.value, idC3.value, finC2.value, inicioC2.value)">Modificar</button>
+    {{avisoModificarCorte}}
+
+    <br><br>
+
+    <button (click)="verCortes()">Ver cortes</button>
+
+    <table *ngIf=verTablaC>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Inicio</th>
+                <th>Fin</th>
+                <th>Barrio</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of cortesLista; let i = index" [attr.data-index]="i">
+                <td>{{cortesLista[i].id_corte}}</td>
+                <td>{{cortesLista[i].inicio}}</td>
+                <td>{{cortesLista[i].fin}}</td>
+                <td>{{cortesLista[i].barrio}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+
+    <input type="text" placeholder="ingrese id para ver corte" #idcorte><br>
+    <button (click)="verCorte(idcorte.value)">Ver corte</button><br>
+    <table *ngIf=listaCorte>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>barrio</th>
+                <th>Inicio</th>
+                <th>Fin</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{corteLista[0].id_corte}}</td>
+                <td>{{corteLista[0].barrio}}</td>
+                <td>{{corteLista[0].inicio}}</td>
+                <td>{{corteLista[0].fin}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <br><br><p style="font-size: xx-large; font-weight: bolder;text-align:center">Metodos perzonalizados</p><br>
+    <p>Cortes por barrio</p>
+    <input type="text" placeholder="ingrese el barrio" #barrio><br>
+    <button (click)="cortesXbarrio(barrio.value)">Ver cortes</button><br>
+    {{cantidadCortes}}
+    <br>
+    <p>Duracion por corte</p>
+    <input type="text" placeholder="ingrese el id del corte" #corte><br>
+    <button (click)="duracionXcorte(corte.value)">Ver duracion del corte</button><br>
+    {{duracion}}
+    <br>
+    <p>Domicilios por barrio</p>
+    <input type="text" placeholder="nombre del barrio" #barrio2><br>
+    <button (click)="domiciliosXbarrio(barrio2.value)">Ver domicilios</button>
+    {{cantidadDomicilios}}
 </div>
