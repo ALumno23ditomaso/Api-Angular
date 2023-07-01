@@ -95,6 +95,18 @@ export class ApiService {
     return this.http.get("http://localhost:2414/cortes/" + params, headers)
   }
 
+  cortesXbarrio(barrio: any, headers: any){
+    return this.http.get("http://localhost:2414/cortes/" + barrio + "/cantidad_de_cortes", headers)
+  }
+
+  duracionXcorte(idCorte: any, headers: any){
+    return this.http.get("http://localhost:2414/cortes/" + idCorte + "/duracion", headers)
+  }
+
+  domiciliosXbarrio(barrio: any, headers: any){
+    return this.http.get("http://localhost:2414/domicilios/" + barrio + "/cantidad", headers)
+  }
+
 
 
 
